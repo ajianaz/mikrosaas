@@ -1,0 +1,55 @@
+# =============================================================
+# MikroSaaS — Shared PostgreSQL Service
+# =============================================================
+# Reusable PG instance on the `hermes` Docker network.
+# Any container on the `hermes` network can connect using:
+#   host=postgres  port=5432
+#
+# Usage:
+#   docker compose up -d                    # start
+#   docker compose logs -f postgres         # tail logs
+#   docker compose down                    # stop (data preserved in volume)
+#   docker compose down -v                 # stop + DELETE data
+#   docker compose exec postgres psql -U mikrosaas   # open console
+#
+# Connecting from another container on `hermes` network:
+#   DATABASE_URL=postgres://mikrosaas:<password>@postgres:5432/mikrosaas?sslmode=disable
+#
+# Connecting from host:
+#   DATABASE_URL=postgres://mikrosaas:<password>@localhost:5432/mikrosaas?sslmode=disable
+#
+# For other apps — create additional databases:
+#   docker compose exec postgres createdb -U mikrosaas myapp_db
+# =============================================================
+
+services:
+  postgres:
+    image: postgres:17-alpine
+    container_name: mikrosaas-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-mikrosaas}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is required — set it in .env}
+      POSTGRES_DB: ${POSTGRES_DB:-mikrosaas}
+      # Allow any DB name to be created (not locked to POSTGRES_DB only)
+      POSTGRES_HOST_AUTH_METHOD: scram-sha-256
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-mikrosaas} -d ${POSTGRES_DB:-mikrosaas}"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+      start_period: 10s
+    networks:
+      - hermes
+
+volumes:
+  pgdata:
+    driver: local
+
+networks:
+  hermes:
+    external: true
