@@ -1,0 +1,70 @@
+# golangci-lint configuration for MikroSaaS
+# Docs: https://golangci-lint.run/usage/configuration/
+
+run:
+  timeout: 3m
+  modules-download-mode: readonly
+
+linters:
+  enable:
+    # Default linters
+    - errcheck      # Check for unchecked errors
+    - gosimple      # Simplify code
+    - govet         # Go vet checks
+    - ineffassign   # Detect ineffectual assignments
+    - staticcheck   # Advanced static analysis
+    - unused        # Check for unused code
+
+    # Additional linters
+    - bodyclose     # Check HTTP response body close
+    - contextcheck  # Check context.Context propagation
+    - errname       # Check error naming
+    - exhaustive    # Check switch exhaustiveness
+    - gocritic      # Comprehensive Go analyzer
+    - gofmt         # Check formatting
+    - goimports     # Check import ordering
+    - misspell      # Check for misspelled words
+    - nakedret      # Check for naked returns
+    - nilerr        # Check for nil errors
+    - noctx         # Check HTTP requests without context
+    - prealloc      # Check slice preallocation
+    - unconvert     # Remove unnecessary conversions
+    - unparam       # Remove unused function parameters
+
+linters-settings:
+  errcheck:
+    check-type-assertions: true
+  govet:
+    enable-all: true
+    disable:
+      - fieldalignment
+  gocritic:
+    enabled-tags:
+      - diagnostic
+      - style
+      - performance
+  goimports:
+    local-prefixes: github.com/ajianaz/mikrosaas
+  nakedret:
+    max-func-lines: 5
+
+issues:
+  exclude-rules:
+    # Allow underscores in test files
+    - path: _test\.go
+      linters:
+        - errcheck
+    # Exclude generated files
+    - path: \.gen\.go
+      linters:
+        - all
+  max-issues-per-linter: 50
+  max-same-issues: 10
+
+severity:
+  default-severity: warning
+  rules:
+    - linters:
+        - errcheck
+        - gocritic
+      severity: error
