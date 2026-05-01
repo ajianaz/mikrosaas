@@ -133,7 +133,10 @@ func TestListRequestJSON(t *testing.T) {
 func TestListRequestJSON_IsActivePointer(t *testing.T) {
 	t.Run("nil pointer", func(t *testing.T) {
 		lr := ListRequest{Page: 1, PerPage: 10}
-		data, _ := json.Marshal(lr)
+		data, err := json.Marshal(lr)
+		if err != nil {
+			t.Fatalf("json.Marshal failed: %v", err)
+		}
 		s := string(data)
 		if !strings.Contains(s, "null") {
 			t.Errorf("nil is_active should produce null, got: %s", s)
@@ -142,7 +145,10 @@ func TestListRequestJSON_IsActivePointer(t *testing.T) {
 	t.Run("non-nil pointer", func(t *testing.T) {
 		active := false
 		lr := ListRequest{IsActive: &active}
-		data, _ := json.Marshal(lr)
+		data, err := json.Marshal(lr)
+		if err != nil {
+			t.Fatalf("json.Marshal failed: %v", err)
+		}
 		s := string(data)
 		if !strings.Contains(s, "is_active") {
 			t.Error("expected is_active field")

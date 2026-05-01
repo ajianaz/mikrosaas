@@ -94,6 +94,24 @@ func TestValidate(t *testing.T) {
 			errSub:  "BCRYPT_COST must be between",
 		},
 		{
+			name: "bcrypt cost min boundary (4)",
+			config: Config{
+				DatabaseURL: "postgres://localhost",
+				JWTSecret:   "secret",
+				BcryptCost:  4,
+			},
+			wantErr: false,
+		},
+		{
+			name: "bcrypt cost max boundary (31)",
+			config: Config{
+				DatabaseURL: "postgres://localhost",
+				JWTSecret:   "secret",
+				BcryptCost:  31,
+			},
+			wantErr: false,
+		},
+		{
 			name: "valid config with bcrypt 10",
 			config: Config{
 				DatabaseURL: "postgres://localhost/db",

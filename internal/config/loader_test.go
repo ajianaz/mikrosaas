@@ -42,9 +42,7 @@ func TestString(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			l := NewLoader("MY_")
-			if tt.envVal != "" {
-				t.Setenv(tt.envKey, tt.envVal)
-			}
+			t.Setenv(tt.envKey, tt.envVal)
 			got := l.String(tt.key, tt.fallback)
 			if got != tt.want {
 				t.Errorf("String(%q, %q) = %q, want %q", tt.key, tt.fallback, got, tt.want)
@@ -68,9 +66,7 @@ func TestInt(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			l := NewLoader()
-			if tt.envVal != "" {
-				t.Setenv("TEST_PORT", tt.envVal)
-			}
+			t.Setenv("TEST_PORT", tt.envVal)
 			got := l.Int("TEST_PORT", tt.fallback)
 			if got != tt.want {
 				t.Errorf("Int() = %d, want %d", got, tt.want)
@@ -95,9 +91,7 @@ func TestDuration(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			l := NewLoader()
-			if tt.envVal != "" {
-				t.Setenv("TEST_TIMEOUT", tt.envVal)
-			}
+			t.Setenv("TEST_TIMEOUT", tt.envVal)
 			got := l.Duration("TEST_TIMEOUT", tt.fallback)
 			if got != tt.want {
 				t.Errorf("Duration() = %v, want %v", got, tt.want)
@@ -131,9 +125,7 @@ func TestBool(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			l := NewLoader()
-			if tt.envVal != "" {
-				t.Setenv("TEST_BOOL", tt.envVal)
-			}
+			t.Setenv("TEST_BOOL", tt.envVal)
 			got := l.Bool("TEST_BOOL", tt.fallback)
 			if got != tt.want {
 				t.Errorf("Bool() = %v, want %v", got, tt.want)
