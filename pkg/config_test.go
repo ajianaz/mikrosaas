@@ -1,6 +1,7 @@
 package mikrosaas
 
 import (
+	"strings"
 	"testing"
 	"time"
 )
@@ -213,13 +214,7 @@ func assertEqual[T comparable](t *testing.T, field string, want, got T) {
 
 func assertContains(t *testing.T, field, s, sub string) {
 	t.Helper()
-	if sub != "" {
-		// simple substring check
-		for i := 0; i <= len(s)-len(sub); i++ {
-			if s[i:i+len(sub)] == sub {
-				return
-			}
-		}
+	if sub != "" && !strings.Contains(s, sub) {
 		t.Errorf("%s: expected to contain %q, got %q", field, sub, s)
 	}
 }

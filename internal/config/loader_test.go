@@ -148,6 +148,7 @@ func TestRequired(t *testing.T) {
 	})
 	t.Run("env not set", func(t *testing.T) {
 		l := NewLoader()
+		t.Setenv("TEST_NOTSET_REQUIRED", "")
 		_, err := l.Required("TEST_NOTSET_REQUIRED")
 		if err == nil {
 			t.Fatal("expected error for missing required var")
@@ -180,6 +181,7 @@ func TestMustString(t *testing.T) {
 	})
 	t.Run("env not set panics", func(t *testing.T) {
 		l := NewLoader()
+		t.Setenv("TEST_MUST_NOTSET", "")
 		defer func() {
 			r := recover()
 			if r == nil {
